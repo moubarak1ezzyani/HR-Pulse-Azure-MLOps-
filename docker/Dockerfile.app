@@ -1,0 +1,1 @@
+# Image pour le pipeline Python

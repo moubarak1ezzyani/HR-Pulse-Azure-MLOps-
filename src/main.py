@@ -1,0 +1,1 @@
+# Point d'entrée pour lancer le pipeline complet
