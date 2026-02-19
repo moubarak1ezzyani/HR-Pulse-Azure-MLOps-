@@ -18,3 +18,10 @@ data/
 # model
 models/
 
+# terraform
+.terraform/
+infra/
+*.tf
+*.tfstate
+
+
