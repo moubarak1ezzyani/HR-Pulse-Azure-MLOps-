@@ -34,4 +34,4 @@ for doc in response:
         print(f"Type : {entity.category}")
         print(f"Sous-type : {entity.subcategory}")
         print(f"Score : {entity.confidence_score}")
-        print("-----")
+        print("------")
