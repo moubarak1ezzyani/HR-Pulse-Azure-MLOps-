@@ -15,6 +15,7 @@ reports/evidently/
 
 # data
 data/
+models/
 
 # model
 models/
