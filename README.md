@@ -172,3 +172,27 @@ Now that `uv` is set up, would you like me to create the **`pyproject.toml`** co
 |Main Config|`requirements.txt`|`pyproject.toml`|
 |Exact Versioning|`pip freeze > reqs.txt`|`uv.lock` (Auto-generated)|
 |Environment Sync|`pip install -r ...`|`uv sync`|
+
+
+## The NLP Cleaning Pipeline
+### 1. Normalization (Lowercasing)
+We convert all text to lowercase. To a computer, "Python", "PYTHON", and "python" are treated as three distinct words. By normalizing, you reduce the complexity of the vocabulary so the model knows they are the same thing.
+
+### 2. Noise Removal
+We remove punctuation, special characters (like #, @, *), and HTML tags if your data was scraped from the web.
+
+Example: "Django!" becomes "Django".
+
+### 3. Stop Words Removal
+We remove very frequent words that carry little to no semantic value (e.g., "the", "a", "and", "is", "in").
+
+Impact: This allows the model to focus on high-value keywords like "Cloud", "SQL", or "Developer".
+
+### 4. Lemmatization or Stemming
+We reduce words to their root or dictionary form.
+
+Stemming: A "cruder" method that chops off the ends of words (e.g., "connection", "connected", "connective" all become "connect").
+
+Lemmatization: A "smarter" method that uses a dictionary to find the actual root (e.g., "is", "am", "are" all become the lemma "be").
+
+Example: "recruiting", "recruited", and "recruits" all become "recruit".
