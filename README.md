@@ -48,20 +48,76 @@ nlp-ticket-classification/
 
 ## Les Branches Temporaires (Features)
 
-Pour chaque étape du brief, tu créeras une branche feature/ issue de develop.
+C'est une excellente nouvelle d'avoir déjà validé la Phase 3 (l'entraînement du modèle) ! Cela te permet de te concentrer sur l'ingénierie, le déploiement et l'architecture MLOps.
 
-    feature/eda-nlp-prep : (Étape 1) Analyse exploratoire, scripts de nettoyage texte.
+D'après le brief de ton projet (HR-Pulse), voici la stratégie de branches Git idéale pour implémenter le reste du projet étape par étape. Ces branches correspondent exactement aux phases demandées et à la structure finale de ton dépôt (`/infra`, `/backend`, `/frontend`, `/tests`).
 
-    feature/embeddings-chromadb : (Étape 2) Intégration Hugging Face et ChromaDB.
+### 1. 🏗️ Branche Infrastructure (Phase 1)
 
-    feature/model-training : (Étape 3) Création du modèle sklearn et évaluation.
+**Nom de la branche :** `feature/infra-terraform`
 
-    feature/ml-monitoring : (Étape 5 - Bonus) Scripts Evidently AI.
+* **Ce que tu vas y faire :** * Créer le dossier `/infra`.
+* Rédiger les scripts Terraform pour provisionner **Azure SQL Database** et **Azure AI Language**.
+* Configurer le *Remote Backend* (stockage du `.tfstate` sur Azure).
 
-    feature/docker-k8s : (Étape 6) Dockerfiles, CI GitHub Actions et Yaml K8s.
 
-    feature/infra-monitoring : (Étape 7) Prometheus, Grafana, Node Exporter.
 
+### 2. 🗄️ Branche Pipeline de Données (Phase 2)
+
+**Nom de la branche :** `feature/azure-data-pipeline`
+
+* **Ce que tu vas y faire :** * Script d'ingestion et de nettoyage de `jobs.csv` (avec `uv`).
+* Connexion à l'API **Azure AI Language** pour extraire les compétences (NER).
+* Connexion et injection des données formatées (id, job_title, skills_extracted en JSON) dans **Azure SQL** via `pyodbc` et SQLAlchemy.
+
+
+
+### 3. ⚙️ Branche API Backend (Phase 4 - Partie 1)
+
+**Nom de la branche :** `feature/backend-fastapi`
+
+* **Ce que tu vas y faire :** * Créer le dossier `/backend`.
+* Développer l'API avec **FastAPI**.
+* Exposer les endpoints pour : lister les jobs (depuis Azure SQL), chercher par compétences, et utiliser ton modèle ML (la Phase 3) pour prédire le salaire.
+
+
+
+### 4. 🖥️ Branche Frontend (Phase 4 - Partie 2)
+
+**Nom de la branche :** `feature/frontend-app`
+
+* **Ce que tu vas y faire :** * Créer le dossier `/frontend`.
+* Développer l'interface utilisateur avec **Streamlit** (ou NextJS).
+* Permettre aux RH de visualiser les données, de charger de nouveaux fichiers, et d'interroger ton API.
+
+
+
+### 5. 🐳 Branche Conteneurisation & Tests (Phases 5 & 6)
+
+**Nom de la branche :** `feature/docker-and-tests`
+
+* **Ce que tu vas y faire :** * Créer le dossier `/tests` et écrire tes tests unitaires avec **Pytest**.
+* Créer les `Dockerfile` pour le backend et le frontend.
+* Créer le fichier `docker-compose.yml` à la racine pour tout lancer (y compris la base de l'observabilité).
+* Intégrer le Provider Docker Terraform.
+
+
+
+### 6. 🚀 Branche CI/CD & Observabilité (Phase 7)
+
+**Nom de la branche :** `feature/ci-observability`
+
+* **Ce que tu vas y faire :** * Créer le dossier `.github/workflows/` pour tes **GitHub Actions** (Linting avec Ruff/Flake8, Pytest, Build Docker).
+* Intégrer **OpenTelemetry** dans ton code FastAPI pour instrumenter les requêtes.
+* Ajouter **Jaeger** à ton `docker-compose.yml` pour tracer les requêtes (port 16686).
+
+
+
+---
+
+**💡 Conseil de pro :** Étant donné que tu utilises `uv` (qui est obligatoire pour ton projet), assure-toi de bien utiliser les commandes `uv pip install` ou `uv run` dans tes Dockerfiles et tes workflows GitHub Actions.
+
+Par quelle branche souhaites-tu commencer aujourd'hui ? La création de l'infrastructure Terraform ou la connexion avec Azure SQL ?
 
 ## UV : venv alternative
 ### Core Commands (The uv Workflow)
