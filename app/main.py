@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 import joblib
 import pandas as pd
@@ -9,6 +10,16 @@ app = FastAPI(
     description="API de prédiction pour les ressources humaines",
     version="1.0.0"
 )
+
+# link to the frontend part
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"], # Autorise uniquement ton Frontend Next.js local
+    allow_credentials=True,
+    allow_methods=["*"], # Autorise toutes les méthodes (GET, POST, etc.)
+    allow_headers=["*"], # Autorise tous les headers
+)
+
 
 # 2. Charger le modèle ML (Random Forest)
 try:
