@@ -1,1 +1,52 @@
 # CI: Lint & Build Docker (sur push main/develop)
+name: CI HR-Pulse
+
+on:
+  push:
+    branches: [ develop ]
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - '.github/workflows/**' # Déclenche aussi si on modifie le pipeline
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: uv sync
+        
+      - name: Run Pytest
+        run: uv run pytest
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24' # On utilise la v24 comme sur ton Ubuntu local
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Build Next.js
+        run: npm run build
