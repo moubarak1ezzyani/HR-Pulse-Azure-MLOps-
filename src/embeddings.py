@@ -10,17 +10,18 @@ def create_vector_db(csv_path, db_path="../models/chroma_db"):
     print(f"Loading cleaned data from {csv_path}...")
     df = pd.read_csv(csv_path)
     
-    # Drop rows where the cleaned description might be empty
+    # cleaned description : Drop empty rows 
     df = df.dropna(subset=['cleaned_description'])
     
     print("Initializing ChromaDB Client...")
-    # This creates a persistent local database in the folder "./chroma_db"
+    
+    # local chroma db 
     chroma_client = chromadb.PersistentClient(path=db_path)
     
-    # We use the default HuggingFace model for embeddings
+    # embeddings : default HuggingFace model  
     sentence_transformer_ef = embedding_functions.DefaultEmbeddingFunction()
     
-    # Create or load the collection
+    # Create / load the collection
     collection_name = "hr_jobs_collection"
     collection = chroma_client.get_or_create_collection(
         name=collection_name, 
@@ -29,14 +30,13 @@ def create_vector_db(csv_path, db_path="../models/chroma_db"):
     
     print("Generating embeddings and inserting into ChromaDB...")
     
-    # Prepare data for ChromaDB (Requires lists of strings)
-    # We use the DataFrame index as the ID for simplicity
+    # ChromaDB : Prepare data (Requires lists of strings)
+    # for simplicity : index -> ID  
     documents = df['cleaned_description'].tolist()
     metadatas = [{"job_title": str(title)} for title in df['Job Title'].tolist()]
     ids = [str(i) for i in df.index.tolist()]
     
-    # ChromaDB can handle batches, but for huge datasets, it's better to chunk.
-    # For this dataset, we can usually insert directly:
+    # batches/chunks : huge datasets -> chunk (possible with chroma db)
     collection.add(
         documents=documents,
         metadatas=metadatas,

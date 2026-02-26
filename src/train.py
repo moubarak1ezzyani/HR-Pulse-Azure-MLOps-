@@ -14,42 +14,41 @@ from config import BASE_DIR, DATA_PATH, MODEL_DIR, MODEL_PATH
 def train_model():
     print("🚀 Démarrage de la phase d'entraînement...")
 
-    # 2. Chargement des données
+    # load data
     df = pd.read_csv(DATA_PATH)
     
-    # Nettoyage de sécurité : on supprime les lignes où le salaire (notre cible) est manquant
+    # missed val
     df = df.dropna(subset=['Avg_Sal_K'])
     
-    # On remplace les NaN éventuels dans le texte par une chaîne vide
+    # NaN texte ->  empty cahin
     df['cleaned_description'] = df['cleaned_description'].fillna("")
 
-    # 3. Séparation des Features (X) et de la Target (y)
+    # sepcify : feat & target
     X = df[['cleaned_description', 'Size_Avg', 'Revenue_Avg_Millions']]
     y = df['Avg_Sal_K']
 
-    # Train / Test split (80% entraînement, 20% test)
+    # Train / Test split 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    print(f"📊 Données divisées : {len(X_train)} pour l'entraînement, {len(X_test)} pour le test.")
 
-    # 4. Création du Preprocessor avec ColumnTransformer
-    # Il applique TF-IDF sur le texte et StandardScaler sur les nombres
+    # Preprocessor & ColumnTransformer
+    # texte -> TF-IDF & num -> StandardScaler
     preprocessor = ColumnTransformer(
         transformers=[
             ('text', TfidfVectorizer(max_features=1000), 'cleaned_description'),
             ('num', StandardScaler(), ['Size_Avg', 'Revenue_Avg_Millions'])
         ])
 
-    # 5. Création du Pipeline complet (Préparation + Modèle)
+    # Pipeline complet (Préparation + Modèle)
     pipeline = Pipeline(steps=[
         ('preprocessor', preprocessor),
         ('regressor', RandomForestRegressor(n_estimators=100, random_state=42))
     ])
 
-    # 6. Entraînement du modèle
+    # model training
     print("🧠 Entraînement du RandomForest en cours (cela peut prendre quelques secondes)...")
     pipeline.fit(X_train, y_train)
 
-    # 7. Évaluation du modèle
+    # model evaluation
     predictions = pipeline.predict(X_test)
     mae = mean_absolute_error(y_test, predictions)
     r2 = r2_score(y_test, predictions)
@@ -58,8 +57,8 @@ def train_model():
     print(f"   - MAE (Erreur Absolue Moyenne) : {mae:.2f} K$")
     print(f"   - R² Score (Précision globale) : {r2:.2f}")
 
-    # 8. Sauvegarde du modèle dans le dossier ignoré par Git
-    os.makedirs(MODEL_DIR, exist_ok=True) # Crée le dossier s'il n'existe pas
+
+    os.makedirs(MODEL_DIR, exist_ok=True) # create folder if it doesn t exist
     joblib.dump(pipeline, MODEL_PATH)
     print(f"\n💾 Modèle sauvegardé avec succès dans : {MODEL_PATH}")
 
