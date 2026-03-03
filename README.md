@@ -303,3 +303,11 @@ Salaries often have outliers (very high or very low).
 | **Add Job Location** | High (Cost of living adjustment) |
 
 **Since you've committed your baseline, would you like to try implementing one of these (like extracting Seniority from the title) or are we ready to move to the API/Azure phase?**
+
+# docker
+
+build dcokerfile backend : `sudo docker build -t hr-pulse-backend .`
+run : `sudo docker run -p 8000:8000 hr-pulse-backend`
+
+build dcokerfile frontend : `sudo docker build -t hr-pulse-frontend .`
+run : `sudo docker run -p 3000:3000 hr-pulse-frontend`

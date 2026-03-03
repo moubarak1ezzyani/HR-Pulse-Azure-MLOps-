@@ -3,4 +3,4 @@ __pycache__
 *.pyc
 .git
 .github
-data/*.csv  # Si tu as des gros fichiers CSV de données
+data/*.csv  

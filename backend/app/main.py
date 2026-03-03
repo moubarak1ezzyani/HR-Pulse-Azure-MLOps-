@@ -12,12 +12,18 @@ app = FastAPI(
 )
 
 # link to the frontend part
+# Modifie cette partie dans ton main.py
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"], # Autorise uniquement ton Frontend Next.js local
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:3001",
+        "http://0.0.0.0:3000"
+    ],
     allow_credentials=True,
-    allow_methods=["*"], # Autorise toutes les méthodes (GET, POST, etc.)
-    allow_headers=["*"], # Autorise tous les headers
+    allow_methods=["*"], 
+    allow_headers=["*"],
 )
 
 
