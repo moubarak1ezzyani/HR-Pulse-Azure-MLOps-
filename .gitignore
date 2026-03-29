@@ -16,6 +16,8 @@ reports/evidently/
 # data
 data/
 models/
+mise_en_situation.py
+HR-Pulse-Presentation.pptx
 
 # model
 models/
